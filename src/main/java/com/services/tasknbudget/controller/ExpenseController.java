@@ -1,5 +1,6 @@
 package com.services.tasknbudget.controller;
 
+import com.services.tasknbudget.dto.ExpenseDTO;
 import com.services.tasknbudget.entity.Expense;
 import com.services.tasknbudget.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,19 @@ public class ExpenseController {
 	private ExpenseService expenseService;
 
 	@PostMapping("/expense")
-	public ResponseEntity<Expense> createExpense(@RequestBody final Expense expense) {
+	public ResponseEntity<ExpenseDTO> createExpense(@RequestBody final ExpenseDTO expense) {
 		if (expense != null) {
-			Expense newExpense = expenseService.createExpense(expense);
+			ExpenseDTO newExpense = expenseService.createExpense(expense);
 			return ResponseEntity.ok(newExpense);
 		}
 		return ResponseEntity.badRequest().build();
 	}
 
 	@PutMapping("/expense/{expenseId}")
-	public ResponseEntity<Expense> updateExpense(@PathVariable("expenseId") final Integer expenseId,
-	                                             @RequestBody final Expense expense) {
+	public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable("expenseId") final Integer expenseId,
+	                                             @RequestBody final ExpenseDTO expense) {
 		if (expenseId != null && expense != null) {
-			Optional<Expense> updatedExpense = expenseService.updateExpense(expenseId, expense);
+			Optional<ExpenseDTO> updatedExpense = expenseService.updateExpense(expenseId, expense);
 			return updatedExpense.map(ResponseEntity::ok)
 					.orElseGet(() -> ResponseEntity.unprocessableEntity().build());
 		}
@@ -36,9 +37,9 @@ public class ExpenseController {
 	}
 
 	@GetMapping("/expense/{expenseId}")
-	public ResponseEntity<Expense> getExpenseById(@PathVariable("expenseId") final Integer expenseId) {
+	public ResponseEntity<ExpenseDTO> getExpenseById(@PathVariable("expenseId") final Integer expenseId) {
 		if (expenseId != null) {
-			Optional<Expense> expense = expenseService.getExpenseById(expenseId);
+			Optional<ExpenseDTO> expense = expenseService.getExpenseById(expenseId);
 			return expense.map(ResponseEntity::ok)
 					.orElseGet(() -> ResponseEntity.notFound().build());
 		}
@@ -55,8 +56,17 @@ public class ExpenseController {
 	}
 
 	@GetMapping("/expense/all")
-	public ResponseEntity<List<Expense>> getAllExpense() {
-		List<Expense> expenses = expenseService.getAllExpense();
+	public ResponseEntity<List<ExpenseDTO>> getAllExpense() {
+		List<ExpenseDTO> expenses = expenseService.getAllExpense();
 		return ResponseEntity.ok(expenses);
+	}
+
+	@PostMapping("/expense/all")
+	public ResponseEntity<String> getAllExpenseByBudgetId(@RequestBody final List<ExpenseDTO> expenses) {
+		if (expenses != null && !expenses.isEmpty()) {
+			expenseService.saveAllExpenses(expenses);
+			return ResponseEntity.ok("Expenses saved successfully");
+		}
+		return ResponseEntity.badRequest().build();
 	}
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class Budget {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer budgetId;
+	private Integer id;
 
 	@OneToOne(mappedBy = "budget", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private BudgetDetails budgetDetails;
@@ -18,17 +18,16 @@ public class Budget {
 	private List<Expense> expenses = new ArrayList<>();
 
 	@OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "incomeId", referencedColumnName = "incomeId")
 	private List<Income> income = new ArrayList<>();
 
 	private String budgetDate;
 
-	public Integer getBudgetId() {
-		return budgetId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setBudgetId(Integer budgetId) {
-		this.budgetId = budgetId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public List<Expense> getExpenses() {

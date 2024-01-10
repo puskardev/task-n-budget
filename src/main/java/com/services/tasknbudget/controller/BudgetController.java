@@ -1,5 +1,6 @@
 package com.services.tasknbudget.controller;
 
+import com.services.tasknbudget.dto.BudgetDTO;
 import com.services.tasknbudget.entity.Budget;
 
 import com.services.tasknbudget.service.BudgetService;
@@ -14,10 +15,19 @@ public class BudgetController {
     private BudgetService budgetService;
 
     @GetMapping("/budget/{budgetDate}")
-    public ResponseEntity<Budget> getBudgetByDate(@PathVariable("budgetDate") final String budgetDate) {
+    public ResponseEntity<BudgetDTO> getBudgetByDate(@PathVariable("budgetDate") final String budgetDate) {
         if (budgetDate != null && !budgetDate.isEmpty()) {
-            Budget budget = this.budgetService.getBudgetByDate(budgetDate);
+            BudgetDTO budget = this.budgetService.getBudgetByDate(budgetDate);
             return ResponseEntity.ok(budget);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/budget")
+    public ResponseEntity<BudgetDTO> createBudget(@RequestBody final String budgetDate) {
+        if (budgetDate != null && !budgetDate.isEmpty()) {
+            BudgetDTO newBudget = this.budgetService.createBudget(budgetDate);
+            return ResponseEntity.ok(newBudget);
         }
         return ResponseEntity.badRequest().build();
     }

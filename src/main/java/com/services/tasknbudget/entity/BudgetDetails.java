@@ -74,4 +74,13 @@ public class BudgetDetails {
     public void setTotalSavings(Double totalSavings) {
         this.totalSavings = totalSavings;
     }
+
+
+    public Budget getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Budget budget) {
+        this.budget = budget;
+    }
 }

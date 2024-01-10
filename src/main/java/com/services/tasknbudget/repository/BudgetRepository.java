@@ -8,16 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Integer> {
-    public Budget findByBudgetId(Integer budgetId);
-
-    public List<Expense> findExpensesByBudgetId(Integer budgetId);
-
-    public Budget findByBudgetDate(String budgetDate);
-
-    public List<Income> findIncomeByBudgetId(Integer budgetId);
-
-    public BudgetDetails findBudgetDetailsByBudgetId(Integer budgetId);
+    public Optional<Budget> findByBudgetDate(String budgetDate);
+//    public Optional<List<Expense>> findExpensesById(Integer id);
+//
+//    public Optional<List<Income>> findIncomeById(Integer id);
+//
+//    public Optional<BudgetDetails> findBudgetDetailsById(Integer id);
 }

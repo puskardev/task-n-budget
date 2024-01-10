@@ -1,5 +1,6 @@
 package com.services.tasknbudget.controller;
 
+import com.services.tasknbudget.dto.IncomeDTO;
 import com.services.tasknbudget.entity.Income;
 import com.services.tasknbudget.service.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +17,18 @@ public class IncomeController {
 	private IncomeService incomeService;
 
 	@PostMapping("/income")
-	public ResponseEntity<Income> createIncome(final Income income) {
+	public ResponseEntity<IncomeDTO> createIncome(final IncomeDTO income) {
 		if (income != null) {
-			Income newIncome = incomeService.createIncome(income);
+			IncomeDTO newIncome = incomeService.createIncome(income);
 			return ResponseEntity.ok(newIncome);
 		}
 		return ResponseEntity.badRequest().build();
 	}
 
 	@PutMapping("/income/{incomeId}")
-	public ResponseEntity<Income> updateIncome(final Integer incomeId, final Income income) {
+	public ResponseEntity<IncomeDTO> updateIncome(final Integer incomeId, final IncomeDTO income) {
 		if (incomeId != null && income != null) {
-			Optional<Income> updatedIncome = incomeService.updateIncome(incomeId, income);
+			Optional<IncomeDTO> updatedIncome = incomeService.updateIncome(incomeId, income);
 			return updatedIncome.map(ResponseEntity::ok)
 								.orElseGet(() -> ResponseEntity.unprocessableEntity().build());
 		}
@@ -35,9 +36,9 @@ public class IncomeController {
 	}
 
 	@GetMapping("/income/{incomeId}")
-	public ResponseEntity<Income> getIncomeById(final Integer incomeId) {
+	public ResponseEntity<IncomeDTO> getIncomeById(final Integer incomeId) {
 		if (incomeId != null) {
-			Optional<Income> income = incomeService.getIncomeById(incomeId);
+			Optional<IncomeDTO> income = incomeService.getIncomeById(incomeId);
 			return income.map(ResponseEntity::ok)
 					     .orElseGet(() -> ResponseEntity.notFound().build());
 		}
@@ -54,8 +55,8 @@ public class IncomeController {
 	}
 
 	@GetMapping("/income/all")
-	public ResponseEntity<List<Income>> getAllIncome() {
-		List<Income> incomes = incomeService.getAllIncome();
+	public ResponseEntity<List<IncomeDTO>> getAllIncome() {
+		List<IncomeDTO> incomes = incomeService.getAllIncome();
 		return ResponseEntity.ok(incomes);
 	}
 }
