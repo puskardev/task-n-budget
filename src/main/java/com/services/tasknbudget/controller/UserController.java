@@ -16,10 +16,10 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/register")
-	public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
 		if(userDTO != null) {
-			userService.registerUser(userDTO);
-			return ResponseEntity.ok("User registered successfully");
+			UserDTO savedUser = userService.registerUser(userDTO);
+			return ResponseEntity.ok(savedUser);
 		}
 		return ResponseEntity.badRequest().build();
 	}

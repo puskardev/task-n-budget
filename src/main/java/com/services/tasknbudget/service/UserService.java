@@ -2,6 +2,7 @@ package com.services.tasknbudget.service;
 
 import com.services.tasknbudget.dto.UserDTO;
 import com.services.tasknbudget.entity.User;
+import com.services.tasknbudget.mapper.UserMapper;
 import com.services.tasknbudget.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +17,13 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	public void registerUser(UserDTO userDTO) {
-		User user = new User();
-		user.setUsername(userDTO.getUsername());
+	@Autowired
+	private UserMapper userMapper;
+
+	public UserDTO registerUser(UserDTO userDTO) {
+		User user = userMapper.toEntity(userDTO);
+		// encode password before saving to database.
 		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-		userRepository.save(user);
+		return userMapper.toDto(userRepository.save(user));
 	}
 }
