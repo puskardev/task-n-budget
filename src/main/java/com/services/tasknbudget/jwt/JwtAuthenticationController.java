@@ -1,5 +1,6 @@
 package com.services.tasknbudget.jwt;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Profile("prod")
 public class JwtAuthenticationController {
 
 	private final JwtTokenService tokenService;
