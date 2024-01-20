@@ -1,7 +1,6 @@
 package com.services.tasknbudget.dto;
 
 public class BudgetDetailsDTO {
-	private Integer budgetDetailsId;
 	private Integer budgetId;
 	private Double totalIncome;
 	private Double totalExpenses;
@@ -10,12 +9,14 @@ public class BudgetDetailsDTO {
 	private Double totalSubscriptionExpenses;
 	private Double totalSavings;
 
-	public Integer getBudgetDetailsId() {
-		return budgetDetailsId;
-	}
-
-	public void setBudgetDetailsId(Integer budgetDetailsId) {
-		this.budgetDetailsId = budgetDetailsId;
+	public BudgetDetailsDTO(Integer budgetId) {
+		this.budgetId = budgetId;
+		this.totalIncome = 0.0;
+		this.totalExpenses = 0.0;
+		this.totalMiscExpenses = 0.0;
+		this.totalCreditCardExpenses = 0.0;
+		this.totalSubscriptionExpenses = 0.0;
+		this.totalSavings = 0.0;
 	}
 
 	public Integer getBudgetId() {

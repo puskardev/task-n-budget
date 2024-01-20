@@ -2,7 +2,6 @@ package com.services.tasknbudget.service;
 
 import com.services.tasknbudget.dto.BudgetDTO;
 import com.services.tasknbudget.entity.Budget;
-import com.services.tasknbudget.mapper.BudgetDetailsMapper;
 import com.services.tasknbudget.mapper.ExpenseMapper;
 import com.services.tasknbudget.mapper.IncomeMapper;
 import com.services.tasknbudget.repository.BudgetRepository;
@@ -22,7 +21,7 @@ public class BudgetService {
 	private IncomeMapper incomeMapper;
 
 	@Autowired
-	private BudgetDetailsMapper budgetDetailsMapper;
+	private BudgetDetailsService budgetDetailsService;
 
 	public BudgetDTO getBudgetByDate(final String budgetDate) {
 		try {
@@ -35,15 +34,16 @@ public class BudgetService {
 			budgetDTO.setId(entity.getId());
 			budgetDTO.setBudgetDate(entity.getBudgetDate());
 
-			budgetDTO.setBudgetDetails(budgetDetailsMapper.toDto(entity.getBudgetDetails()));
-
 			entity.getExpenses().stream()
-				.map(expenseMapper::toDto)
-				.forEach(budgetDTO.getExpenses()::add);
+					.map(expenseMapper::toDto)
+					.forEach(budgetDTO.getExpenses()::add);
 
 			entity.getIncome().stream()
-				.map(incomeMapper::toDto)
-				.forEach(budgetDTO.getIncome()::add);
+					.map(incomeMapper::toDto)
+					.forEach(budgetDTO.getIncome()::add);
+
+			budgetDTO.setBudgetDetails(
+					budgetDetailsService.getBudgetDetails(entity.getId(), budgetDTO.getExpenses(), budgetDTO.getIncome()));
 
 			return budgetDTO;
 		} catch (Exception e) {

@@ -11,9 +11,6 @@ public class Budget {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@OneToOne(mappedBy = "budget", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private BudgetDetails budgetDetails;
-
 	@OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Expense> expenses = new ArrayList<>();
 
@@ -52,13 +49,5 @@ public class Budget {
 
 	public void setBudgetDate(String budgetDate) {
 		this.budgetDate = budgetDate;
-	}
-
-	public BudgetDetails getBudgetDetails() {
-		return budgetDetails;
-	}
-
-	public void setBudgetDetails(BudgetDetails budgetDetails) {
-		this.budgetDetails = budgetDetails;
 	}
 }

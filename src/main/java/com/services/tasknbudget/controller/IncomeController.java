@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class IncomeController {
 	private IncomeService incomeService;
 
 	@PostMapping("/income")
-	public ResponseEntity<IncomeDTO> createIncome(final IncomeDTO income) {
+	public ResponseEntity<IncomeDTO> createIncome(@RequestBody final IncomeDTO income) {
 		if (income != null) {
 			IncomeDTO newIncome = incomeService.createIncome(income);
 			return ResponseEntity.ok(newIncome);
@@ -26,7 +27,8 @@ public class IncomeController {
 	}
 
 	@PutMapping("/income/{incomeId}")
-	public ResponseEntity<IncomeDTO> updateIncome(final Integer incomeId, final IncomeDTO income) {
+	public ResponseEntity<IncomeDTO> updateIncome(@PathVariable("incomeId") final Integer incomeId,
+	                                              @RequestBody final IncomeDTO income) {
 		if (incomeId != null && income != null) {
 			Optional<IncomeDTO> updatedIncome = incomeService.updateIncome(incomeId, income);
 			return updatedIncome.map(ResponseEntity::ok)
@@ -36,7 +38,7 @@ public class IncomeController {
 	}
 
 	@GetMapping("/income/{incomeId}")
-	public ResponseEntity<IncomeDTO> getIncomeById(final Integer incomeId) {
+	public ResponseEntity<IncomeDTO> getIncomeById(@PathVariable("incomeId") final Integer incomeId) {
 		if (incomeId != null) {
 			Optional<IncomeDTO> income = incomeService.getIncomeById(incomeId);
 			return income.map(ResponseEntity::ok)
@@ -46,10 +48,10 @@ public class IncomeController {
 	}
 
 	@DeleteMapping("/income/{incomeId}")
-	public ResponseEntity<String> deleteIncomeById(final Integer incomeId) {
+	public ResponseEntity<Object> deleteIncomeById(@PathVariable("incomeId") final Integer incomeId) {
 		if (incomeId != null) {
 			incomeService.deleteIncomeById(incomeId);
-			return ResponseEntity.ok("Income deleted successfully");
+			return ResponseEntity.ok(Collections.singletonMap("message", "Income deleted successfully"));
 		}
 		return ResponseEntity.badRequest().build();
 	}

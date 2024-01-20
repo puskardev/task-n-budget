@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,10 +48,10 @@ public class ExpenseController {
 	}
 
 	@DeleteMapping("/expense/{expenseId}")
-	public ResponseEntity<String> deleteExpenseById(@PathVariable("expenseId") final Integer expenseId) {
+	public ResponseEntity<Object> deleteExpenseById(@PathVariable("expenseId") final Integer expenseId) {
 		if (expenseId != null) {
 			expenseService.deleteExpenseById(expenseId);
-			return ResponseEntity.ok("Expense deleted successfully");
+			return ResponseEntity.ok(Collections.singletonMap("message", "Expense deleted successfully"));
 		}
 		return ResponseEntity.badRequest().build();
 	}

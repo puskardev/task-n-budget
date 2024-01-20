@@ -1,46 +1,43 @@
 package com.services.tasknbudget.service;
 
+import com.services.tasknbudget.constants.ExpenseConstants;
 import com.services.tasknbudget.dto.BudgetDetailsDTO;
-import com.services.tasknbudget.entity.BudgetDetails;
-import com.services.tasknbudget.mapper.BudgetDetailsMapper;
-import com.services.tasknbudget.repository.BudgetDetailsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.services.tasknbudget.dto.ExpenseDTO;
+import com.services.tasknbudget.dto.IncomeDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BudgetDetailsService {
+	public BudgetDetailsDTO getBudgetDetails(Integer id, List<ExpenseDTO> expenses, List<IncomeDTO> income) {
+		BudgetDetailsDTO budgetDetails = new BudgetDetailsDTO(id);
 
-	@Autowired
-	private BudgetDetailsRepository budgetDetailsRepository;
+		budgetDetails.setTotalExpenses(expenses.stream()
+				.mapToDouble(ExpenseDTO::getAmount)
+				.sum());
 
-	@Autowired
-	private BudgetDetailsMapper budgetDetailsMapper;
+		budgetDetails.setTotalIncome(income.stream()
+				.mapToDouble(IncomeDTO::getAmount)
+				.sum());
 
-	public BudgetDetailsDTO createBudgetDetails(final BudgetDetailsDTO budgetDetails) {
-		try {
-			BudgetDetails entity = budgetDetailsMapper.toEntity(budgetDetails);
-			return budgetDetailsMapper.toDto(budgetDetailsRepository.save(entity));
-		} catch (Exception e) {
-			throw new RuntimeException("Error creating budgetDetails: " + e.getMessage(), null);
-		}
-	}
+		budgetDetails.setTotalMiscExpenses(expenses.stream()
+				.filter(expense -> expense.getExpenseCategoryType().equals(ExpenseConstants.EXPENSE_TYPE_MISC))
+				.mapToDouble(ExpenseDTO::getAmount)
+				.sum());
 
-	public BudgetDetailsDTO updateBudgetDetails(final Integer budgetDetailsId, final BudgetDetailsDTO newBudgetDetails) {
-		try {
-			return budgetDetailsRepository.findById(budgetDetailsId)
-					.map(budgetDetails -> {
-						BudgetDetails entity = budgetDetailsMapper.toEntity(newBudgetDetails);
-						entity.setBudgetDetailsId(budgetDetailsId);
-						BudgetDetails savedBudgetDetails = budgetDetailsRepository.save(entity);
-						return budgetDetailsMapper.toDto(savedBudgetDetails);
-					}).orElseThrow(() -> new RuntimeException("BudgetDetails Not Found: " + budgetDetailsId));
-		} catch (Exception e) {
-			throw new RuntimeException("Update failed: " + e.getMessage(), null);
-		}
-	}
+		budgetDetails.setTotalCreditCardExpenses(expenses.stream()
+				.filter(expense -> expense.getExpenseCategoryType().equals(ExpenseConstants.EXPENSE_TYPE_CREDIT_CARD))
+				.mapToDouble(ExpenseDTO::getAmount)
+				.sum());
 
-	public BudgetDetails getBudgetDetailsById(final Integer budgetDetailsId) {
-		return budgetDetailsRepository.findById(budgetDetailsId)
-				.orElseThrow(() -> new RuntimeException("BudgetDetails Not Found: " + budgetDetailsId));
+		budgetDetails.setTotalSubscriptionExpenses(expenses.stream()
+				.filter(expense -> expense.getExpenseCategoryType().equals(ExpenseConstants.EXPENSE_TYPE_SUBSCRIPTION))
+				.mapToDouble(ExpenseDTO::getAmount)
+				.sum());
+
+		budgetDetails.setTotalSavings(budgetDetails.getTotalIncome() - budgetDetails.getTotalExpenses());
+
+		return budgetDetails;
 	}
 }
